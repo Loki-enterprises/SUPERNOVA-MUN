@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Discount Calculator - Chrysallis Day</title>
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(to right,#4e73df,#1cc88a);
+    text-align:center;
+    color:white;
+}
+.container{
+    padding:40px;
+}
+.card{
+    background:rgba(0,0,0,0.3);
+    padding:30px;
+    border-radius:20px;
+    width:400px;
+    margin:auto;
+    margin-top:30px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+input{
+    padding:10px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    width:80%;
+}
+button{
+    padding:10px 20px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    background:white;
+    color:black;
+}
+button:hover{
+    background:#f8f9fc;
+}
+#mainApp{display:none;}
+#codeBox{display:none; text-align:left; background:black; color:#00ffcc; padding:10px; border-radius:10px; overflow:auto; max-height:300px;}
+.footer{
+    margin-top:40px;
+    opacity:0.8;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>💼 Smart Discount Calculator System</h1>
+<h3>Chrysallis Day Presentation</h3>
+
+<!-- LOGIN SECTION -->
+<div class="card" id="loginSection">
+<h2>Secure Login</h2>
+<input type="text" id="username" placeholder="Username">
+<br>
+<input type="password" id="password" placeholder="Password">
+<br>
+<button onclick="login()">Login</button>
+<p id="loginMessage"></p>
+</div>
+
+<!-- MAIN APP -->
+<div class="card" id="mainApp">
+<h2>Welcome, <span id="userDisplay"></span></h2>
+
+<h3>Material / Product</h3>
+<input type="text" id="material" placeholder="Enter Material / Product Name">
+<br>
+
+<h3>Billing Details</h3>
+<input type="number" id="price" placeholder="Original Price">
+<br>
+<input type="number" id="discount" placeholder="Discount %">
+<br>
+<button onclick="calculateBill()">Generate Bill</button>
+<p id="result"></p>
+
+<h3>🎯 Lucky Bonus Discount</h3>
+<button onclick="bonusDiscount()">Try Your Luck</button>
+<p id="bonusResult"></p>
+
+<h3>💻 View Code</h3>
+<button onclick="showCode()">Show Full Code</button>
+<pre id="codeBox"></pre>
+
+<br>
+<button onclick="logout()">Logout</button>
+</div>
+
+<div class="footer">
+Made by VIII D
+</div>
+
+</div>
+
+<script>
+// Global bonus variable
+var bonus = 0; 
+
+function login(){
+    const correctUser = "VIII D";
+    const correctPass = "VIII D";
+
+    var user=document.getElementById("username").value;
+    var pass=document.getElementById("password").value;
+
+    if(user===correctUser && pass===correctPass){
+        document.getElementById("loginSection").style.display="none";
+        document.getElementById("mainApp").style.display="block";
+        document.getElementById("userDisplay").innerText=user;
+    }else{
+        document.getElementById("loginMessage").innerText="❌ Invalid Login!";
+    }
+}
+
+function bonusDiscount(){
+    bonus = Math.floor(Math.random() * 6) + 1; // 1% to 6%
+    document.getElementById("bonusResult").innerHTML =
+        "🎉 You unlocked an extra " + bonus + "% discount on your next purchase!";
+}
+
+function calculateBill(){
+
+    var material = document.getElementById("material").value;
+    var price=parseFloat(document.getElementById("price").value);
+    var discount=parseFloat(document.getElementById("discount").value);
+    var gst=18;
+
+    if(isNaN(price) || isNaN(discount) || material.trim()===""){
+        document.getElementById("result").innerText="Please enter valid numbers and material name!";
+        return;
+    }
+
+    // Regular discount
+    var discountAmount = price * discount / 100;
+
+    // Bonus discount
+    var bonusAmount = (price - discountAmount) * bonus / 100;
+
+    var afterDiscount = price - discountAmount - bonusAmount;
+    var gstAmount = afterDiscount * gst / 100;
+    var finalAmount = afterDiscount + gstAmount;
+
+    var totalSaved = discountAmount + bonusAmount;
+
+    document.getElementById("result").innerHTML=
+        "<br><b>----- BILL SUMMARY -----</b><br><br>" +
+        "Material / Product: " + material + "<br>" +
+        "Original Price: ₹"+price.toFixed(2)+"<br>" +
+        "Discount ("+discount+"%): -₹"+discountAmount.toFixed(2)+"<br>" +
+        "Bonus Discount ("+bonus+"%): -₹"+bonusAmount.toFixed(2)+"<br>" +
+        "After Discount: ₹"+afterDiscount.toFixed(2)+"<br>" +
+        "GST (18%): +₹"+gstAmount.toFixed(2)+"<br><br>" +
+        "<b>Final Payable Amount: ₹"+finalAmount.toFixed(2)+"</b><br>" +
+        "<b>Total Saved: ₹"+totalSaved.toFixed(2)+"</b>";
+}
+
+// Show code function
+function showCode(){
+    var code = document.documentElement.outerHTML;
+    var box = document.getElementById("codeBox");
+    box.style.display="block";
+    box.textContent = code;
+}
+
+function logout(){
+    location.reload();
+}
+</script>
+
+</body>
+</html>
